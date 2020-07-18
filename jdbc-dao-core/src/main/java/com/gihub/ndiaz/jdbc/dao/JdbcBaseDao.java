@@ -1,6 +1,8 @@
 package com.gihub.ndiaz.jdbc.dao;
 
 import com.gihub.ndiaz.jdbc.exception.DaoException;
+import com.gihub.ndiaz.jdbc.util.PageFetcher;
+import com.gihub.ndiaz.jdbc.util.PaginationHelper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,8 +58,12 @@ public class JdbcBaseDao {
 
   <D> Page<D> queryForPage(final String sql, final AbstractSqlParameterSource params,
                            final Pageable pageable, final RowMapper<D> rowMapper) {
-    // TODO
-    return null;
+    final PageFetcher<D> pageFetcher =
+        PageFetcher.builder(jdbcTemplate, sql, rowMapper)
+            .parameters(params)
+            .pageable(pageable)
+            .build();
+    return PaginationHelper.fetchPage(pageFetcher);
   }
 
   Integer insert(final String sql, final AbstractSqlParameterSource params) {
@@ -66,13 +72,13 @@ public class JdbcBaseDao {
 
   Number insert(final String sql, final AbstractSqlParameterSource params,
                 final List<String> keyColumnNames) throws DaoException {
-    final KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
-    final int affectedRows = jdbcTemplate
-        .update(sql, params, generatedKeyHolder, keyColumnNames.toArray(new String[0]));
+    final KeyHolder keyHolder = new GeneratedKeyHolder();
+    final int affectedRows =
+        jdbcTemplate.update(sql, params, keyHolder, keyColumnNames.toArray(new String[0]));
     if (affectedRows <= 0) {
       throw new DaoException("Could not insert row into database");
     }
-    return generatedKeyHolder.getKey();
+    return keyHolder.getKey();
   }
 
   Integer update(final String sql) {
