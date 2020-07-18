@@ -11,6 +11,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
@@ -89,6 +91,19 @@ public abstract class JdbcEntityDao<T> {
 
   protected List<T> queryForList(final String sql, final T entity) {
     return dao.queryForList(sql, rowUnmapper.getSqlParameters(entity), rowMapper);
+  }
+
+  protected Page<T> queryForPage(final String sql, final Pageable pageable) {
+    return dao.queryForPage(sql, pageable, rowMapper);
+  }
+
+  protected Page<T> queryForPage(final String sql, final AbstractSqlParameterSource params,
+                                 final Pageable pageable) {
+    return dao.queryForPage(sql, params, pageable, rowMapper);
+  }
+
+  protected Page<T> queryForPage(final String sql, final T entity, final Pageable pageable) {
+    return dao.queryForPage(sql, rowUnmapper.getSqlParameters(entity), pageable, rowMapper);
   }
 
   protected Integer insert(final String sql, final T entity) {

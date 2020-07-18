@@ -4,6 +4,8 @@ import com.gihub.ndiaz.jdbc.exception.DaoException;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
@@ -38,6 +40,16 @@ public abstract class JdbcAbstractDao {
   protected <D> List<D> queryForList(final String sql, final AbstractSqlParameterSource params,
                                      final RowMapper<D> rowMapper) {
     return dao.queryForList(sql, params, rowMapper);
+  }
+
+  protected <D> Page<D> queryForPage(final String sql, final Pageable pageable,
+                                     final RowMapper<D> rowMapper) {
+    return dao.queryForPage(sql, pageable, rowMapper);
+  }
+
+  protected <D> Page<D> queryForPage(final String sql, final AbstractSqlParameterSource params,
+                                     final Pageable pageable, final RowMapper<D> rowMapper) {
+    return dao.queryForPage(sql, params, pageable, rowMapper);
   }
 
   protected Integer insert(final String sql, final AbstractSqlParameterSource params) {
