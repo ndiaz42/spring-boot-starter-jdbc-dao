@@ -1,8 +1,8 @@
 package com.gihub.ndiaz.jdbc.dao;
 
 import com.gihub.ndiaz.jdbc.exception.DaoException;
-import com.gihub.ndiaz.jdbc.mapper.DefaultResultSetExtractor;
-import com.gihub.ndiaz.jdbc.mapper.DefaultRowMapper;
+import com.gihub.ndiaz.jdbc.mapper.impl.DefaultResultSetExtractor;
+import com.gihub.ndiaz.jdbc.mapper.impl.DefaultRowMapper;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.List;
