@@ -15,7 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JdbcDao {
+public class JdbcBaseDao {
 
   @Autowired
   private NamedParameterJdbcTemplate jdbcTemplate;
