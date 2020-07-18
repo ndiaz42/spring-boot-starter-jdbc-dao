@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 import java.util.stream.Collector;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,10 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public abstract class PaginationHelper {
+public interface PaginationHelper {
 
-  public static <D> Page<D> fetchPage(final PageFetcher<D> pageFetcher) {
+  static <D> Page<D> fetchPage(final PageFetcher<D> pageFetcher) {
     final NamedParameterJdbcTemplate jdbcTemplate = pageFetcher.getJdbcTemplate();
     final String query = pageFetcher.getQuery();
     final CombinedSqlParameterSource parameters =
