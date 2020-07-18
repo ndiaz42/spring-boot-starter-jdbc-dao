@@ -1,1 +1,1 @@
-# jdbc-dao-spring-boot-starter
+# spring-boot-starter-jdbc-dao
