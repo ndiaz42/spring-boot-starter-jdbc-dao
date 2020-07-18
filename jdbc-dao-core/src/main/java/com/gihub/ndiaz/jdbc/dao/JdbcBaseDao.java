@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
@@ -45,6 +47,17 @@ public class JdbcBaseDao {
   <D> List<D> queryForList(final String sql, final AbstractSqlParameterSource params,
                            final RowMapper<D> rowMapper) {
     return jdbcTemplate.query(sql, params, rowMapper);
+  }
+
+  <D> Page<D> queryForPage(final String sql, final Pageable pageable,
+                           final RowMapper<D> rowMapper) {
+    return queryForPage(sql, new MapSqlParameterSource(), pageable, rowMapper);
+  }
+
+  <D> Page<D> queryForPage(final String sql, final AbstractSqlParameterSource params,
+                           final Pageable pageable, final RowMapper<D> rowMapper) {
+    // TODO
+    return null;
   }
 
   Integer insert(final String sql, final AbstractSqlParameterSource params) {
