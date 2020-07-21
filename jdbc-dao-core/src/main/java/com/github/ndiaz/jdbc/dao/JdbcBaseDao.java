@@ -1,8 +1,8 @@
-package com.gihub.ndiaz.jdbc.dao;
+package com.github.ndiaz.jdbc.dao;
 
-import com.gihub.ndiaz.jdbc.exception.DaoException;
-import com.gihub.ndiaz.jdbc.util.PageFetcher;
-import com.gihub.ndiaz.jdbc.util.PaginationHelper;
+import com.github.ndiaz.jdbc.exception.DaoException;
+import com.github.ndiaz.jdbc.util.PageFetcher;
+import com.github.ndiaz.jdbc.util.PaginationHelper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

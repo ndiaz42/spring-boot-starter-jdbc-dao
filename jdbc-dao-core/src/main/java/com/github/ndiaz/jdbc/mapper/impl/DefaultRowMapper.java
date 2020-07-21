@@ -1,4 +1,4 @@
-package com.gihub.ndiaz.jdbc.mapper.impl;
+package com.github.ndiaz.jdbc.mapper.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

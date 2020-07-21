@@ -1,4 +1,4 @@
-package com.gihub.ndiaz.jdbc.exception;
+package com.github.ndiaz.jdbc.exception;
 
 public class DaoException extends Exception {
 
