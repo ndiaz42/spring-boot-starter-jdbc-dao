@@ -1,4 +1,4 @@
-package com.gihub.ndiaz.jdbc.util;
+package com.github.ndiaz.jdbc.util;
 
 import java.util.ArrayList;
 import java.util.List;
