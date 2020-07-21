@@ -1,10 +1,14 @@
-package com.gihub.ndiaz.jdbc.dao;
+package com.github.ndiaz.jdbc.dao;
 
-import com.gihub.ndiaz.jdbc.exception.DaoException;
+import com.github.ndiaz.jdbc.exception.DaoException;
+import com.github.ndiaz.jdbc.util.PageFetcher;
+import com.github.ndiaz.jdbc.util.PaginationHelper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
@@ -47,19 +51,34 @@ public class JdbcBaseDao {
     return jdbcTemplate.query(sql, params, rowMapper);
   }
 
+  <D> Page<D> queryForPage(final String sql, final Pageable pageable,
+                           final RowMapper<D> rowMapper) {
+    return queryForPage(sql, new MapSqlParameterSource(), pageable, rowMapper);
+  }
+
+  <D> Page<D> queryForPage(final String sql, final AbstractSqlParameterSource params,
+                           final Pageable pageable, final RowMapper<D> rowMapper) {
+    final PageFetcher<D> pageFetcher =
+        PageFetcher.builder(jdbcTemplate, sql, rowMapper)
+            .parameters(params)
+            .pageable(pageable)
+            .build();
+    return PaginationHelper.fetchPage(pageFetcher);
+  }
+
   Integer insert(final String sql, final AbstractSqlParameterSource params) {
     return update(sql, params);
   }
 
   Number insert(final String sql, final AbstractSqlParameterSource params,
                 final List<String> keyColumnNames) throws DaoException {
-    final KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
-    final int affectedRows = jdbcTemplate
-        .update(sql, params, generatedKeyHolder, keyColumnNames.toArray(new String[0]));
+    final KeyHolder keyHolder = new GeneratedKeyHolder();
+    final int affectedRows =
+        jdbcTemplate.update(sql, params, keyHolder, keyColumnNames.toArray(new String[0]));
     if (affectedRows <= 0) {
       throw new DaoException("Could not insert row into database");
     }
-    return generatedKeyHolder.getKey();
+    return keyHolder.getKey();
   }
 
   Integer update(final String sql) {

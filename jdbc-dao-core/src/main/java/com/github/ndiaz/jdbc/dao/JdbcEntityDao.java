@@ -1,16 +1,18 @@
-package com.gihub.ndiaz.jdbc.dao;
+package com.github.ndiaz.jdbc.dao;
 
-import com.gihub.ndiaz.jdbc.exception.DaoException;
-import com.gihub.ndiaz.jdbc.mapper.RowUnmapper;
-import com.gihub.ndiaz.jdbc.mapper.impl.DefaultResultSetExtractor;
-import com.gihub.ndiaz.jdbc.mapper.impl.DefaultRowMapper;
-import com.gihub.ndiaz.jdbc.mapper.impl.DefaultRowUnmapper;
+import com.github.ndiaz.jdbc.exception.DaoException;
+import com.github.ndiaz.jdbc.mapper.RowUnmapper;
+import com.github.ndiaz.jdbc.mapper.impl.DefaultResultSetExtractor;
+import com.github.ndiaz.jdbc.mapper.impl.DefaultRowMapper;
+import com.github.ndiaz.jdbc.mapper.impl.DefaultRowUnmapper;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
@@ -89,6 +91,19 @@ public abstract class JdbcEntityDao<T> {
 
   protected List<T> queryForList(final String sql, final T entity) {
     return dao.queryForList(sql, rowUnmapper.getSqlParameters(entity), rowMapper);
+  }
+
+  protected Page<T> queryForPage(final String sql, final Pageable pageable) {
+    return dao.queryForPage(sql, pageable, rowMapper);
+  }
+
+  protected Page<T> queryForPage(final String sql, final AbstractSqlParameterSource params,
+                                 final Pageable pageable) {
+    return dao.queryForPage(sql, params, pageable, rowMapper);
+  }
+
+  protected Page<T> queryForPage(final String sql, final T entity, final Pageable pageable) {
+    return dao.queryForPage(sql, rowUnmapper.getSqlParameters(entity), pageable, rowMapper);
   }
 
   protected Integer insert(final String sql, final T entity) {

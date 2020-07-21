@@ -1,6 +1,6 @@
-package com.gihub.ndiaz.jdbc.mapper.impl;
+package com.github.ndiaz.jdbc.mapper.impl;
 
-import com.gihub.ndiaz.jdbc.mapper.RowUnmapper;
+import com.github.ndiaz.jdbc.mapper.RowUnmapper;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
