@@ -6,7 +6,6 @@ import com.github.ndiaz.jdbc.util.PaginationHelper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -16,13 +15,14 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JdbcBaseDao {
 
-  @Autowired
-  private NamedParameterJdbcTemplate jdbcTemplate;
+  private final NamedParameterJdbcTemplate jdbcTemplate;
+
+  public JdbcBaseDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    this.jdbcTemplate = namedParameterJdbcTemplate;
+  }
 
   <D> D query(final String sql, final ResultSetExtractor<D> rse) {
     return query(sql, new MapSqlParameterSource(), rse);

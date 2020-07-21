@@ -1,13 +1,9 @@
 package com.github.ndiaz.jdbc.mapper.impl;
 
 import com.github.ndiaz.jdbc.mapper.RowUnmapper;
-import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.stereotype.Component;
 
-@Component
-@Order
 public class DefaultRowUnmapper<T> implements RowUnmapper<T> {
 
   @Override
