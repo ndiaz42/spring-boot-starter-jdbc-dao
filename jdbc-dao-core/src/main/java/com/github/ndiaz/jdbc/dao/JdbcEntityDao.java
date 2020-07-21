@@ -3,7 +3,6 @@ package com.github.ndiaz.jdbc.dao;
 import com.github.ndiaz.jdbc.exception.DaoException;
 import com.github.ndiaz.jdbc.mapper.RowUnmapper;
 import com.github.ndiaz.jdbc.mapper.impl.DefaultResultSetExtractor;
-import com.github.ndiaz.jdbc.mapper.impl.DefaultRowMapper;
 import com.github.ndiaz.jdbc.mapper.impl.DefaultRowUnmapper;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
@@ -13,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
@@ -23,37 +23,44 @@ public abstract class JdbcEntityDao<T> {
   private final String className;
   @Autowired
   private JdbcBaseDao dao;
-  @Autowired
+  @Autowired(required = false)
   private RowMapper<T> rowMapper;
-  @Autowired
+  @Autowired(required = false)
   private RowUnmapper<T> rowUnmapper;
-  @Autowired
+  @Autowired(required = false)
   private ResultSetExtractor<T> resultSetExtractor;
 
   public JdbcEntityDao() {
-    className = getClassSimpleName();
+    className = getClassTSimpleName();
   }
 
   @SuppressWarnings("unchecked")
-  private String getClassSimpleName() {
-    return ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
-        .getActualTypeArguments()[0]).getSimpleName();
+  private Class<T> getClassT() {
+    return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
+        .getActualTypeArguments()[0];
+  }
+
+  private String getClassTSimpleName() {
+    return getClassT().getSimpleName();
   }
 
   @PostConstruct
   private void checkMappers() {
-    if (rowMapper instanceof DefaultRowMapper<?>) {
+    if (rowMapper == null) {
       log.info("No implementation of RowMapper<{}> found. Using DefaultRowMapper instead.",
           className);
+      rowMapper = new BeanPropertyRowMapper<>(getClassT());
     }
-    if (rowUnmapper instanceof DefaultRowUnmapper<?>) {
+    if (rowUnmapper == null) {
       log.info("No implementation of RowUnmapper<{}> found. Using DefaultRowUnmapper instead.",
           className);
+      rowUnmapper = new DefaultRowUnmapper<>();
     }
-    if (resultSetExtractor instanceof DefaultResultSetExtractor<?>) {
+    if (resultSetExtractor == null) {
       log.info(
-          "No implementation of ResultSetExtractor<{}> found. "
-              + "Using DefaultResultSetExtractor instead.", className);
+          "No implementation of ResultSetExtractor<{}> found. Using DefaultResultSetExtractor instead.",
+          className);
+      resultSetExtractor = new DefaultResultSetExtractor<>();
     }
   }
 
