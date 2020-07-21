@@ -1,4 +1,4 @@
-package com.gihub.ndiaz.jdbc.mapper;
+package com.github.ndiaz.jdbc.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
