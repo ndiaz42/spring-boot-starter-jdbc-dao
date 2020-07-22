@@ -14,15 +14,6 @@ public class JdbcDaoProperties {
 
   private Boolean enableSqlFile = false;
 
-  @NestedConfigurationProperty
-  private SqlFileProperties file = new SqlFileProperties();
-
-  @Getter
-  @Setter
-  public static class SqlFileProperties {
-
-    private String path = "db/";
-
-  }
+  private String path = "db/";
 
 }

@@ -23,9 +23,9 @@ public class JdbcDaoAutoConfiguration {
   }
 
   @Bean
-  @ConditionalOnProperty(prefix = "dao.enable-sql-file", value = "true")
+  @ConditionalOnProperty(prefix = "dao", name = "enable-sql-file")
   public SqlFileLoader sqlFileLoader(final Environment environment) {
-    return new SqlFileLoader(this.properties.getFile().getPath(), environment);
+    return new SqlFileLoader(this.properties.getPath(), environment);
   }
 
   @Bean
