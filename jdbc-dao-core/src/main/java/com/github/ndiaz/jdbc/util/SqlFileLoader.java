@@ -42,7 +42,7 @@ public class SqlFileLoader {
     try {
       final YamlMapFactoryBean yamlMapFactoryBean = new YamlMapFactoryBean();
       final Resource[] queryResources =
-          resourceResolver.getResources("classpath*:/" + path + "/sql/**/*.yml");
+          resourceResolver.getResources(path + "/**/*.yml");
       for (final Resource queryResource : queryResources) {
         yamlMapFactoryBean.setResources(queryResource);
         final Map<String, Object> map = yamlMapFactoryBean.getObject();
