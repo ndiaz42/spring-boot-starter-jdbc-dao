@@ -15,6 +15,10 @@ public abstract class JdbcAbstractDao {
   @Autowired
   private JdbcBaseDao dao;
 
+  protected String getSql(final String file, final String name) throws DaoException {
+    return dao.getSql(file, name);
+  }
+
   protected <D> D query(final String sql, final ResultSetExtractor<D> rse) {
     return dao.query(sql, rse);
   }
