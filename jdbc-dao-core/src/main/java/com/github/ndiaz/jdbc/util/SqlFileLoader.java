@@ -3,52 +3,60 @@ package com.github.ndiaz.jdbc.util;
 import com.github.ndiaz.jdbc.exception.DaoException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanInitializationException;
-import org.springframework.boot.env.YamlPropertySourceLoader;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.PropertySource;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.config.YamlMapFactoryBean;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 public class SqlFileLoader {
 
-  private static final Map<String, Map<String, String>> querys = new HashMap<>();
-  private static final Map<String, String> tableNames = new HashMap<>();
+  private static final Map<String, Map<String, String>> queries = new HashMap<>();
 
   private final String path;
-  private final Environment environment;
+  private final ResourcePatternResolver resourceResolver;
 
-  public SqlFileLoader(final String path, final Environment environment) {
+  public SqlFileLoader(final String path, final ResourcePatternResolver resourceResolver) {
     this.path = path;
-    this.environment = environment;
-    init();
+    this.resourceResolver = resourceResolver;
   }
 
   public String getSql(final String file, final String name) throws DaoException {
-    if (querys.containsKey(file)) {
-      final Map<String, String> entityQuerys = querys.get(file);
-      if (entityQuerys.containsKey(name)) {
-        return entityQuerys.get(name);
+    if (queries.containsKey(file)) {
+      final Map<String, String> queriesFile = queries.get(file);
+      if (queriesFile.containsKey(name)) {
+        return queriesFile.get(name);
       }
     }
     log.error("Could not find sql query: {} - {}", file, name);
     throw new DaoException("Could not find sql query: " + file + " - " + name);
   }
 
+  @PostConstruct
   private void init() {
     try {
-      final YamlPropertySourceLoader yamlLoader = new YamlPropertySourceLoader();
-      List<PropertySource<?>> files =
-          yamlLoader.load("tables.yml", new ClassPathResource(path + "tables.yml"));
-      files.forEach(p -> log.info(p.getName() + "-" + p.getProperty(p.getName())));
+      final YamlMapFactoryBean yamlMapFactoryBean = new YamlMapFactoryBean();
+      final Resource[] queryResources =
+          resourceResolver.getResources("classpath*:/" + path + "/sql/**/*.yml");
+      for (final Resource queryResource : queryResources) {
+        yamlMapFactoryBean.setResources(queryResource);
+        final Map<String, Object> map = yamlMapFactoryBean.getObject();
+        if (map != null && queryResource.getFilename() != null) {
+          final Map<String, String> queryMap = map.entrySet().stream()
+              .collect(Collectors.toMap(Map.Entry::getKey, e -> (String) e.getValue()));
+          queries.put(StringUtils.stripFilenameExtension(queryResource.getFilename()), queryMap);
+          log.info("Loaded sql queries from '{}'", queryResource.getFilename());
+        }
+      }
     } catch (final IOException ex) {
       log.error(ex.getMessage(), ex);
       throw new BeanInitializationException(ex.getMessage(), ex);
     }
-
   }
 
 }
