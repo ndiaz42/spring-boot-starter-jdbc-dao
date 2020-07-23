@@ -3,9 +3,11 @@ package com.github.ndiaz.jdbc.dao;
 import com.github.ndiaz.jdbc.exception.DaoException;
 import com.github.ndiaz.jdbc.util.PageFetcher;
 import com.github.ndiaz.jdbc.util.PaginationHelper;
+import com.github.ndiaz.jdbc.util.SqlFileLoader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -18,10 +20,17 @@ import org.springframework.jdbc.support.KeyHolder;
 
 public class JdbcBaseDao {
 
+  @Autowired(required = false)
+  private SqlFileLoader sqlFileLoader;
+
   private final NamedParameterJdbcTemplate jdbcTemplate;
 
   public JdbcBaseDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
     this.jdbcTemplate = namedParameterJdbcTemplate;
+  }
+
+  String getSql(final String name, final String method) throws DaoException {
+    return sqlFileLoader.getSql(name, method);
   }
 
   <D> D query(final String sql, final ResultSetExtractor<D> rse) {
