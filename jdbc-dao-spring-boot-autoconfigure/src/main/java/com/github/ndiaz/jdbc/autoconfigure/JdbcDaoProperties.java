@@ -14,6 +14,6 @@ public class JdbcDaoProperties {
 
   private Boolean enableSqlFile = false;
 
-  private String path = "db/";
+  private String path = "classpath*:/sql";
 
 }
