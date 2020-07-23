@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @Configuration
@@ -24,8 +24,8 @@ public class JdbcDaoAutoConfiguration {
 
   @Bean
   @ConditionalOnProperty(prefix = "dao", name = "enable-sql-file")
-  public SqlFileLoader sqlFileLoader(final Environment environment) {
-    return new SqlFileLoader(this.properties.getPath(), environment);
+  public SqlFileLoader sqlFileLoader(final ResourcePatternResolver resourcePatternResolver) {
+    return new SqlFileLoader(this.properties.getPath(), resourcePatternResolver);
   }
 
   @Bean
