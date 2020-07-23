@@ -29,7 +29,7 @@ public class JdbcBaseDao {
     this.jdbcTemplate = namedParameterJdbcTemplate;
   }
 
-  String getSql(final String name, final String method) throws DaoException {
+  protected String getSql(final String name, final String method) throws DaoException {
     return sqlFileLoader.getSql(name, method);
   }
 
