@@ -27,14 +27,15 @@ public class SqlFileLoader {
   }
 
   public String getSql(final String file, final String name) throws DaoException {
+    log.trace("Looking for SQL file '{}.yml' and query name '{}'...", file, name);
     if (queries.containsKey(file)) {
       final Map<String, String> queriesFile = queries.get(file);
       if (queriesFile.containsKey(name)) {
         return queriesFile.get(name);
       }
     }
-    log.error("Could not find sql query: {} - {}", file, name);
-    throw new DaoException("Could not find sql query: " + file + " - " + name);
+    log.error("Could not find sql query: '{}.yml' - '{}'", file, name);
+    throw new DaoException("Could not find sql query: '" + file + ".yml' - '" + name + "'");
   }
 
   @PostConstruct

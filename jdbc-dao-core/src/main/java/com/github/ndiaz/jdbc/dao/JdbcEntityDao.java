@@ -64,6 +64,10 @@ public abstract class JdbcEntityDao<T> {
     }
   }
 
+  protected String getSql(final String file, final String name) throws DaoException {
+    return dao.getSql(file, name);
+  }
+
   protected T query(final String sql) {
     return dao.query(sql, resultSetExtractor);
   }
