@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -31,15 +30,6 @@ public class JdbcBaseDao {
 
   String getSql(final String name, final String method) throws DaoException {
     return sqlFileLoader.getSql(name, method);
-  }
-
-  <D> D query(final String sql, final ResultSetExtractor<D> rse) {
-    return query(sql, new MapSqlParameterSource(), rse);
-  }
-
-  <D> D query(final String sql, final AbstractSqlParameterSource params,
-              final ResultSetExtractor<D> rse) {
-    return jdbcTemplate.query(sql, params, rse);
   }
 
   <D> D queryForObject(final String sql, final RowMapper<D> rowMapper) {
