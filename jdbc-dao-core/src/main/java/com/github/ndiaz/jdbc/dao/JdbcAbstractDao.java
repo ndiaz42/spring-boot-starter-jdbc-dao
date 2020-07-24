@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 
@@ -17,15 +16,6 @@ public abstract class JdbcAbstractDao {
 
   protected String getSql(final String file, final String name) throws DaoException {
     return dao.getSql(file, name);
-  }
-
-  protected <D> D query(final String sql, final ResultSetExtractor<D> rse) {
-    return dao.query(sql, rse);
-  }
-
-  protected <D> D query(final String sql, final AbstractSqlParameterSource params,
-                        final ResultSetExtractor<D> rse) {
-    return dao.query(sql, params, rse);
   }
 
   protected <D> D queryForObject(final String sql, final RowMapper<D> rowMapper) {

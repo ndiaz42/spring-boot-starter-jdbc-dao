@@ -2,7 +2,6 @@ package com.github.ndiaz.jdbc.dao;
 
 import com.github.ndiaz.jdbc.exception.DaoException;
 import com.github.ndiaz.jdbc.mapper.RowUnmapper;
-import com.github.ndiaz.jdbc.mapper.impl.DefaultResultSetExtractor;
 import com.github.ndiaz.jdbc.mapper.impl.DefaultRowUnmapper;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 
@@ -27,8 +25,6 @@ public abstract class JdbcEntityDao<T> {
   private RowMapper<T> rowMapper;
   @Autowired(required = false)
   private RowUnmapper<T> rowUnmapper;
-  @Autowired(required = false)
-  private ResultSetExtractor<T> resultSetExtractor;
 
   public JdbcEntityDao() {
     className = getClassTSimpleName();
@@ -56,29 +52,12 @@ public abstract class JdbcEntityDao<T> {
           className);
       rowUnmapper = new DefaultRowUnmapper<>();
     }
-    if (resultSetExtractor == null) {
-      log.info(
-          "No implementation of ResultSetExtractor<{}> found. Using DefaultResultSetExtractor instead.",
-          className);
-      resultSetExtractor = new DefaultResultSetExtractor<>();
-    }
   }
 
   protected String getSql(final String file, final String name) throws DaoException {
     return dao.getSql(file, name);
   }
 
-  protected T query(final String sql) {
-    return dao.query(sql, resultSetExtractor);
-  }
-
-  protected T query(final String sql, final AbstractSqlParameterSource params) {
-    return dao.query(sql, params, resultSetExtractor);
-  }
-
-  protected T query(final String sql, final T entity) {
-    return dao.query(sql, rowUnmapper.getSqlParameters(entity), resultSetExtractor);
-  }
 
   protected T queryForObject(final String sql) {
     return dao.queryForObject(sql, rowMapper);
