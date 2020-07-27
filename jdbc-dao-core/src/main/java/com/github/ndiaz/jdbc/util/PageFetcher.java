@@ -11,6 +11,12 @@ import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+/**
+ * Class to store pagination information: the original sql query, the {@code Pageable},
+ * a {@code RowMapper}, etc.
+ *
+ * @param <T> the domain object's class
+ */
 @Builder
 @Getter
 public class PageFetcher<T> {
@@ -25,6 +31,15 @@ public class PageFetcher<T> {
   private final AbstractSqlParameterSource parameters = new MapSqlParameterSource();
   private final RowMapper<T> rowMapper;
 
+  /**
+   * Constructs a builder for {@code PageFetcher}.
+   *
+   * @param jdbcTemplate the <a href="#{@link}">{@link NamedParameterJdbcTemplate}</a> used for fetch the page
+   * @param query        the original sql query to paginate
+   * @param rowMapper    the <a href="#{@link}">{@link RowMapper}</a> to use
+   * @param <T>          the domain object's class
+   * @return a builder for {@code PageFetcher}
+   */
   public static <T> PageFetcherBuilder<T> builder(final NamedParameterJdbcTemplate jdbcTemplate,
                                                   final String query,
                                                   final RowMapper<T> rowMapper) {

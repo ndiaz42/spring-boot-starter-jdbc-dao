@@ -13,6 +13,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.StringUtils;
 
+/**
+ * {@code SqlFileLoader} searches YAML files in src/main/resources/{@code path} and loads the
+ * queries in memory at launch for later use.
+ */
 @Slf4j
 public class SqlFileLoader {
 
@@ -26,6 +30,14 @@ public class SqlFileLoader {
     this.resourceResolver = resourceResolver;
   }
 
+  /**
+   * Gets a sql query string from a YAML file.
+   *
+   * @param file the name of the sql file, without extension
+   * @param name the name of the query (located inside the file)
+   * @return the sql query
+   * @throws DaoException if the query could not be found
+   */
   public String getSql(final String file, final String name) throws DaoException {
     log.trace("Looking for SQL file '{}.yml' and query name '{}'...", file, name);
     if (queries.containsKey(file)) {
