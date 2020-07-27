@@ -4,7 +4,11 @@ import java.util.Map;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
+/**
+ * Combines two <a href="#{@link}">{@link SqlParameterSource}</a> into one. Used for pagination.
+ */
 public class CombinedSqlParameterSource extends AbstractSqlParameterSource {
 
   private final MapSqlParameterSource mapSqlParameterSource;
