@@ -12,8 +12,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+
+/**
+ * Util class to help with pagination. Given a sql query, it constructs another query to page the
+ * results.
+ */
 public interface PaginationHelper {
 
+  /**
+   * Fetches a page.
+   *
+   * @param <D>         the domain object's class
+   * @param pageFetcher the original query and pagination information
+   * @return the page
+   * @see PageFetcher
+   */
   static <D> Page<D> fetchPage(final PageFetcher<D> pageFetcher) {
     final NamedParameterJdbcTemplate jdbcTemplate = pageFetcher.getJdbcTemplate();
     final String query = pageFetcher.getQuery();
